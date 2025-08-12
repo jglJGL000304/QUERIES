@@ -4,64 +4,104 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is an e-commerce data utilities project that provides query functions for a SQLite database. The project uses TypeScript.
+TypeScript-based e-commerce data utilities providing query functions for a SQLite database. The project uses async/await patterns with strong typing throughout.
 
-## Database Schema
+## Key Technologies
 
-The SQLite database contains tables for a complete e-commerce system including:
-
-- customers, addresses, customer_segments, customer_activity_log
-- products, categories, inventory, warehouses
-- orders, order_items
-- reviews
-- promotions
-
-See `schema.ts` for the complete database schema definition.
-
-## Project Structure
-
-- `src/main.ts` - Entry point (currently minimal implementation)
-- `src/schema.ts` - Database schema creation functions
-- `src/queries/` - Directory containing all query modules:
-  - `customer_queries.ts` - Customer-related queries
-  - `product_queries.ts` - Product catalog queries
-  - `order_queries.ts` - Order management queries
-  - `analytics_queries.ts` - Analytics and reporting queries
-  - `inventory_queries.ts` - Inventory management queries
-  - `promotion_queries.ts` - Promotion queries
-  - `review_queries.ts` - Product review queries
-  - `shipping_queries.ts` - Shipping queries
+- **Database**: SQLite with sqlite/sqlite3 packages
+- **Language**: TypeScript (ES2022 target, strict mode)
+- **Runtime**: Node.js with tsx for TypeScript execution
 
 ## Development Commands
 
 ```bash
-# Install dependencies
+# Install dependencies and initialize
 npm run setup
+
+# Run the SDK (TypeScript execution)
+npm run sdk
+
+# Build TypeScript (outputs to ./dist)
+npx tsc
+
+# Run main application
+npx tsx src/main.ts
 ```
 
-## Working with Queries
+## Database Schema
 
-All query functions return Promises and follow these patterns:
+SQLite database (`ecommerce.db`) with 12 interconnected tables:
 
-- Single record queries use `db.get()`
-- Multiple record queries use `db.all()`
-- Use parameterized queries to prevent SQL injection
-- Handle errors by rejecting the Promise
+- **Customer System**: customers, addresses, customer_segments, customer_activity_log
+- **Product System**: products, categories, inventory, warehouses  
+- **Order System**: orders, order_items
+- **Engagement**: reviews, promotions
 
-Example query pattern:
+See `src/schema.ts` for complete schema definitions with foreign keys and constraints.
+
+## Project Structure
+
+```
+src/
+├── main.ts          # Database connection and schema initialization
+├── schema.ts        # Table creation and relationships
+└── queries/         # Query modules (ALL queries must go here)
+    ├── customer_queries.ts   # Customer operations, segmentation
+    ├── product_queries.ts    # Catalog, search, performance
+    ├── order_queries.ts      # Order processing, tracking
+    ├── analytics_queries.ts  # CLV, trends, business intelligence
+    ├── inventory_queries.ts  # Stock, warehouses, transfers
+    ├── promotion_queries.ts  # Campaigns, eligibility
+    ├── review_queries.ts     # Feedback, verification
+    └── shipping_queries.ts   # Delivery, costs, zones
+```
+
+## Query Pattern Standards
+
+All queries follow this consistent pattern:
 
 ```typescript
-export function getCustomerByEmail(db: Database, email: string): Promise<any> {
-  const query = `SELECT * FROM customers WHERE email = ?`;
-  return new Promise((resolve, reject) => {
-    db.get(query, [email], (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
-  });
+import { Database } from 'sqlite';
+
+export async function queryName(
+  db: Database,
+  param: type
+): Promise<ReturnType> {
+  const query = `SQL QUERY WITH ? PLACEHOLDERS`;
+  return await db.get(query, [param]);  // or db.all() for multiple rows
 }
 ```
 
-## Critical Guidance
+**Requirements:**
+- Use parameterized queries (? placeholders) to prevent SQL injection
+- Return Promises with proper TypeScript typing
+- Use `db.get()` for single records, `db.all()` for multiple
+- Define TypeScript interfaces for complex return types
+- Place all queries in appropriate files under `src/queries/`
 
-- Critical: All database queries must be written in the ./src/queries dir
+## Complex Query Patterns
+
+The codebase uses advanced SQL features:
+- CTEs (WITH clauses) for multi-step calculations
+- Window functions (ROW_NUMBER, RANK) for analytics
+- Complex JOINs across multiple tables
+- Aggregate functions with GROUP BY for summaries
+- COALESCE and CASE statements for conditional logic
+
+## Integration Points
+
+**Slack Notifications** (per task.md):
+- System designed for cron job execution
+- Monitors orders pending >3 days
+- Sends alerts to #order-alerts channel
+- Includes customer name and phone in notifications
+
+## Critical Guidelines
+
+1. **ALL database queries MUST be written in `./src/queries/` directory** - never inline SQL in other files
+2. **Use existing query patterns** - review similar queries before writing new ones
+3. **Maintain TypeScript interfaces** - define return types for all complex queries
+4. **Follow naming conventions**:
+   - Query functions: `getXByY`, `findX`, `calculateX`, `updateX`
+   - Use descriptive names matching the business domain
+5. **Test with real data** - database includes sample data for all tables
