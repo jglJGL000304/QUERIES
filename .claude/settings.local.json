@@ -7,12 +7,12 @@
     "ask": []
   },
   "hooks": {
-    "preToolUse": [
+    "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
           {
-            "type": "block",
+            "type": "command",
             "command": "echo 'About to run bash command'"
           }
         ]
@@ -21,7 +21,7 @@
         "matcher": "Edit",
         "hooks": [
           {
-            "type": "block",
+            "type": "command",
             "command": "echo 'About to edit file: {{file_path}}'"
           }
         ]
@@ -30,27 +30,27 @@
         "matcher": "Write",
         "hooks": [
           {
-            "type": "block",
+            "type": "command",
             "command": "echo 'About to write file: {{file_path}}'"
-          } 
+          }
         ]
       },
       {
-        "matcher": "Read|Grep", 
+        "matcher": "Read|Grep",
         "hooks": [
           {
             "type": "command",
-            "command": "node ./hooks/read_hook.js" 
+            "command": "node ./hooks/read_hook.js"
           }
         ]
       }
     ],
-    "postToolUse": [
+    "PostToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
           {
-            "type": "notify",
+            "type": "command",
             "command": "echo 'Bash command completed'"
           }
         ]
@@ -59,7 +59,7 @@
         "matcher": "Edit",
         "hooks": [
           {
-            "type": "notify",
+            "type": "command",
             "command": "echo 'Finished editing: {{file_path}}'"
           }
         ]
@@ -68,7 +68,7 @@
         "matcher": "Write",
         "hooks": [
           {
-            "type": "notify",
+            "type": "command",
             "command": "echo 'Finished writing: {{file_path}}'"
           }
         ]
@@ -77,7 +77,7 @@
         "matcher": "Read",
         "hooks": [
           {
-            "type": "notify",
+            "type": "command",
             "command": "echo 'Finished reading: {{file_path}}'"
           }
         ]
