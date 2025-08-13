@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node $PWD/hooks/read_hook.js"
+            "command": "node /mnt/e/Claude_code/queries/hooks/read_hook.js"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node $PWD/hooks/query_hook.js",
+            "command": "node /mnt/e/Claude_code/queries/hooks/query_hook.js",
             "timeout": 300
           }
         ]
@@ -40,7 +40,7 @@
           },
           {
             "type": "command",
-            "command": "node $PWD/hooks/tsc.js"
+            "command": "node /mnt/e/Claude_code/queries/hooks/tsc.js"
           }
         ]
       },
