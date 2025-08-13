@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "true'" //1. Claude 가 해당 tool 사용을 요청했을때(true) hook 을 정의함
+            "command": "node ./hooks/read_hook.js" //1. Claude 가 해당 tool 사용을 요청했을때(true) hook 을 정의함
           }
         ]
       }
