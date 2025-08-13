@@ -1,0 +1,87 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "block",
+            "command": "echo 'About to run bash command'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "block",
+            "command": "echo 'About to edit file: {{file_path}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "block",
+            "command": "echo 'About to write file: {{file_path}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Grep", // 1. 우리가 주시해야할 tool 이다
+        "hooks": [
+          {
+            "type": "command",
+            "command": "true'" //1. Claude 가 해당 tool 사용을 요청했을때(true) hook 을 정의함
+          }
+        ]
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "notify",
+            "command": "echo 'Bash command completed'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "notify",
+            "command": "echo 'Finished editing: {{file_path}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "notify",
+            "command": "echo 'Finished writing: {{file_path}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "notify",
+            "command": "echo 'Finished reading: {{file_path}}'"
+          }
+        ]
+      }
+    ]
+  }
+}
